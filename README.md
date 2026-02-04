@@ -1,53 +1,303 @@
-# Getting Started with Create React App
+# Prime Flix 🎬
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Uma aplicação web para descobrir, visualizar e gerenciar seus filmes favoritos utilizando a API do The Movie Database (TMDb).
 
-## Available Scripts
+## 📋 Índice
 
-In the project directory, you can run:
+- [Como Rodar Localmente](#como-rodar-localmente)
+- [Bibliotecas Utilizadas](#bibliotecas-utilizadas)
+- [Arquitetura do Projeto](#arquitetura-do-projeto)
+- [Componentes](#componentes)
+- [Estrutura de Pastas](#estrutura-de-pastas)
+- [Funcionalidades](#funcionalidades)
 
-### `npm start`
+## 🚀 Como Rodar Localmente
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Pré-requisitos
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Node.js (versão 14 ou superior)
+- npm (geralmente incluído com Node.js)
 
-### `npm test`
+### Passos para Instalação
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone ou extraia o projeto**
+   ```bash
+   cd Prime-flix
+   ```
 
-### `npm run build`
+2. **Instale as dependências**
+   ```bash
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. **Inicie o servidor de desenvolvimento**
+   ```bash
+   npm start
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4. **Acesse a aplicação**
+   - A aplicação abrirá automaticamente no navegador em `http://localhost:3000`
+   - Caso contrário, abra manualmente o endereço acima
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Scripts Disponíveis
 
-### `npm run eject`
+#### `npm start`
+Executa a aplicação em modo de desenvolvimento. A página recarregará ao detectar alterações no código.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### `npm run build`
+Cria uma versão otimizada da aplicação para produção na pasta `build`. O código será minificado e os nomes de arquivo incluirão hashes para cache.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### `npm test`
+Executa os testes da aplicação em modo interativo.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 📚 Bibliotecas Utilizadas
 
-## Learn More
+| Biblioteca | Versão | Descrição |
+|-----------|--------|-----------|
+| **react** | ^19.2.4 | Biblioteca principal para construção da interface |
+| **react-dom** | ^19.2.4 | Renderização de componentes React no DOM |
+| **react-router-dom** | ^7.13.0 | Roteamento e navegação entre páginas |
+| **axios** | ^1.13.4 | Cliente HTTP para requisições à API |
+| **react-toastify** | ^11.0.5 | Notificações toast (alertas) na interface |
+| **react-scripts** | 5.0.1 | Scripts e configurações do Create React App |
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Bibliotecas de Teste
+- `@testing-library/react` - Testes de componentes React
+- `@testing-library/jest-dom` - Matchers customizados para Jest
+- `@testing-library/dom` - Utilitários para testes DOM
+- `@testing-library/user-event` - Simulação de eventos de usuário
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 🏗️ Arquitetura do Projeto
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+O projeto segue uma arquitetura modular baseada em componentes React com a seguinte estrutura:
+
+### Fluxo de Dados
+
+```
+App.js (Componente Raiz)
+├── ToastContainer (Notificações)
+└── RoutesApp (Sistema de Rotas)
+    ├── Header (Navegação)
+    └── Routes (Páginas)
+        ├── Home (Listagem de filmes)
+        ├── Filmes/:id (Detalhes do filme)
+        ├── Favoritos (Filmes salvos)
+        └── Erro (Página 404)
+```
+
+### Padrões de Arquitetura
+
+- **Separação por Responsabilidade**: Componentes, páginas e serviços são separados em pastas distintas
+- **API Service**: Centralização de requisições HTTP em um único serviço (`api.js`)
+- **LocalStorage**: Persistência de dados do lado do cliente para armazenar filmes favoritos
+- **React Router**: Navegação entre diferentes páginas/rotas
+- **State Management**: Uso de `useState` e `useEffect` para gerenciar estado e efeitos colaterais
+
+---
+
+## 🧩 Componentes
+
+### **Header**
+**Localização:** `src/components/Header/`
+
+Componente de navegação principal da aplicação.
+
+**Características:**
+- Logo que redireciona para a página inicial
+- Link para acessar lista de filmes favoritos
+- Navegação usando React Router
+
+**Props:** Nenhuma
+
+---
+
+## 📄 Páginas
+
+### **Home** 📽️
+**Localização:** `src/pages/Home/`
+
+Página inicial que exibe uma lista de filmes em cartaz.
+
+**Funcionalidades:**
+- Carrega filmes da API TMDb
+- Exibe os 15 filmes mais recentes em cartaz
+- Estado de carregamento enquanto busca os dados
+- Cards clicáveis que levam aos detalhes do filme
+- Dados filtrados por idioma português (pt-BR)
+
+**Estados:**
+- `filmes` - Array com os filmes carregados
+- `loading` - Booleano indicando se está carregando
+
+---
+
+### **Filmes (Detalhes do Filme)** 🎥
+**Localização:** `src/pages/Filmes/`
+
+Página de detalhes de um filme específico.
+
+**Funcionalidades:**
+- Carrega informações completas do filme via parâmetro de rota (`id`)
+- Exibe título, descrição, votação, data de lançamento
+- Botão para salvar o filme nos favoritos
+- Notificações com avisos/sucessos usando React Toastify
+- Tratamento de erros com redirecionamento automático
+- Armazenamento em localStorage
+
+**Estados:**
+- `filme` - Objeto com dados do filme
+- `loading` - Indicador de carregamento
+
+**Comportamento:**
+- Valida se o filme já está nos favoritos antes de salvar
+- Exibe notificações de sucesso ou aviso
+- Redireciona para home se o filme não existir
+
+---
+
+### **Favoritos** ❤️
+**Localização:** `src/pages/Favoritos/`
+
+Página que exibe todos os filmes salvos pelo usuário.
+
+**Funcionalidades:**
+- Carrega filmes do localStorage
+- Exibe lista de filmes favoritos
+- Opção para remover filmes da lista
+- Mensagem quando nenhum filme está salvo
+- Notificações de exclusão com sucesso
+
+**Estados:**
+- `filmes` - Array com os filmes salvos
+
+---
+
+### **Erro** ⚠️
+**Localização:** `src/pages/Erro/`
+
+Página para rotas não encontradas (404).
+
+**Funcionalidades:**
+- Rota coringa (`*`) captura URLs inválidas
+- Exibe mensagem amigável de erro
+
+---
+
+## 📁 Estrutura de Pastas
+
+```
+Prime-flix/
+├── public/                          # Arquivos públicos estáticos
+│   ├── index.html
+│   ├── manifest.json
+│   └── robots.txt
+├── src/                             # Código-fonte principal
+│   ├── components/                  # Componentes reutilizáveis
+│   │   └── Header/
+│   │       ├── index.js
+│   │       └── header.css
+│   ├── pages/                       # Páginas da aplicação
+│   │   ├── Home/
+│   │   │   ├── index.js
+│   │   │   └── home.css
+│   │   ├── Filmes/
+│   │   │   ├── index.js
+│   │   │   └── filme-info.css
+│   │   ├── Favoritos/
+│   │   │   ├── index.js
+│   │   │   └── favoritos.css
+│   │   └── Erro/
+│   │       ├── index.js
+│   │       └── erro.css
+│   ├── services/                    # Serviços de API
+│   │   └── api.js
+│   ├── App.js                       # Componente raiz
+│   ├── index.js                     # Ponto de entrada
+│   ├── index.css                    # Estilos globais
+│   └── routes.js                    # Configuração de rotas
+├── package.json                     # Dependências e scripts
+└── README.md                        # Este arquivo
+```
+
+---
+
+## ⚙️ Serviços
+
+### **API Service** (`src/services/api.js`)
+
+Centraliza todas as requisições HTTP para a API do TMDb.
+
+**Características:**
+- Utiliza `axios` para requisições
+- Base URL configurada: `https://api.themoviedb.org/3/`
+- Reutilizável em toda a aplicação
+
+**Exemplo de uso:**
+```javascript
+import api from '../../services/api';
+
+// Buscar filmes em cartaz
+api.get("movie/now_playing", {
+  params: {
+    api_key: "sua_chave_api",
+    language: "pt-BR"
+  }
+})
+```
+
+---
+
+## 💾 Persistência de Dados
+
+A aplicação utiliza **localStorage** para armazenar filmes favoritos:
+
+- **Chave:** `@primeflix`
+- **Formato:** JSON (array de objetos com dados do filme)
+- **Funcionalidade:** 
+  - Salvar filmes favoritos
+  - Carregar filmes ao abrir a página
+  - Remover filmes da lista
+
+---
+
+## 🎯 Funcionalidades Principais
+
+✅ Listar filmes em cartaz
+✅ Visualizar detalhes de cada filme
+✅ Salvar filmes favoritos
+✅ Gerenciar lista de favoritos (adicionar/remover)
+✅ Persistência de dados com localStorage
+✅ Notificações amigáveis ao usuário
+✅ Navegação intuitiva
+✅ Tratamento de erros e rotas inválidas
+✅ Interface responsiva
+
+---
+
+## 🔗 API Utilizada
+
+**The Movie Database (TMDb)**
+- Site: [https://www.themoviedb.org/](https://www.themoviedb.org/)
+- Documentação: [https://developer.themoviedb.org/docs](https://developer.themoviedb.org/docs)
+- Requisitos: Chave de API (obtida gratuitamente no site)
+
+---
+
+## 📝 Notas Importantes
+
+- A aplicação foi criada com **Create React App**
+- A chave de API do TMDb está exposta no código (considere usar variáveis de ambiente em produção)
+- Os dados de favoritos são armazenados localmente no navegador (não sincroniza entre dispositivos)
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido como aplicação educacional.
 
 ### Analyzing the Bundle Size
 
